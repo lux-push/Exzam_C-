@@ -21,6 +21,7 @@
 #include <set>
 #include <io.h>
 #include <direct.h>
+#include <clocale>
 using namespace std;
 
 //srand(time(NULL));

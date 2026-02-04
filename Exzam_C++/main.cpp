@@ -4,14 +4,54 @@
 #include "Matchmaker.h"
 
 
-
 int main()
-{
-	srand(time(NULL));
-	SetConsoleCP(1251);
-	SetConsoleOutputCP(1251);
-	int ret = 1;
+{  
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
+    srand(time(NULL));
     Matchmaker mm;
+    User* current_user = nullptr;
+    int choice_user;
+    cout << "Добро пожаловать!\n";
+    cout << "1. Войти в Профиль\n";
+    cout << "2. Регистрация Профиля\n";
+    cout << "3. Тестовая база (авто создание)\n";
+    cin >> choice_user;
+
+    if (choice_user == 2)
+    {
+        User new_user;
+        mm.adduser(new_user);
+        current_user = &mm.getusers().back();
+        cout << "Профиль " << current_user->getid() << " создан!\\n";
+    }
+    else if (choice_user == 1)
+    {     
+        string login_id, login_pass;
+        cout << "ID: ";
+        cin >> login_id;
+        cout << "Пароль: ";
+        cin >> login_pass;
+        mm.readtofile("users.txt");
+        current_user = mm.login(login_id, login_pass);
+        if (!current_user)
+        {
+            cout << "Неверный ID или пароль!\n";
+            system("pause");
+            return 1;
+        }
+    }
+    else if (choice_user == 3)
+    {
+        Matchmaker mm_test(true);
+        mm = mm_test;
+    }
+    else 
+    {
+        cout << "Неверный выбор!\\n";
+        return 1;
+    } 
+    int ret = 1;
     int choice;
 	do
 	{ 
@@ -43,6 +83,12 @@ int main()
             break;
         case 3:
         {
+            auto matches = mm.findmatchesforme(current_user);
+            cout << "\n ТОП-3 мэтча для вас:\n";
+            for (int i = 0; i < matches.size(); ++i)
+            {
+                cout << (i + 1) << ". " << matches[i].second.getid() << " (" << fixed << setprecision(0) << matches[i].first << ")\n";
+            }
             system("pause");
             system("cls");
             break;
@@ -51,7 +97,7 @@ int main()
         {
             User new_user;
             cout << "Создание нового пользователя\n";
-            users.push_back(new_user);
+            mm.adduser(new_user);
             system("pause");
             system("cls");
             break;
@@ -63,6 +109,7 @@ int main()
             system("cls");
             break;
         }
+    
         case 0:
             cout << "До свидания!\n";
             ret = 2;

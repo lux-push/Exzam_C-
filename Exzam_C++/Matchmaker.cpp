@@ -1,7 +1,9 @@
 #include "Matchmaker.h"
 vector<User> users = {};
-Matchmaker::Matchmaker()
+Matchmaker::Matchmaker(bool auto_init )
 {
+    if(auto_init)
+    {
         int usercount;
         cout << "Сколько пользователей создать? ";
         cin >> usercount;
@@ -24,8 +26,9 @@ Matchmaker::Matchmaker()
             Preference newpref;
             preferences.push_back(newpref);
         }
-    cout << "\nСваха Готова! " << users.size() << " пользователей, " << preferences.size() << " предпочтений\n\n";
-    system("pause");
+        cout << "\nСваха Готова! " << users.size() << " пользователей, " << preferences.size() << " предпочтений\n\n";
+        system("pause");
+    }
 }
 
 vector<pair<double, User>> Matchmaker::findmatches(int ind)
@@ -131,15 +134,15 @@ void Matchmaker::readtofile(const string& filename)
                 break;
             }
             stringstream ss_line(line); // удобный разбор для чтения с файла чтоб просто разобрать строчки
-            string id, city, gender, education;
+            string id, city, gender, education, pasw;
             int age, interests_count;
-            ss_line >> id >> city >> gender >> education >> age >> interests_count;//разбираем строчку на отдельные данные по пробелам         
+            ss_line >> id >> city >> gender >> education >> age >> interests_count >> pasw;//разбираем строчку на отдельные данные по пробелам         
             u.setid(id);
             u.setcity(city);
             u.setgender(gender);
             u.seteducation(education);
             u.setage(age);
-
+            u.setpassword(pasw);
             if (getline(file, line))
             {       
                 if (!line.empty())
@@ -185,5 +188,29 @@ void Matchmaker::showfullusers()
     }
 }
 
+User* Matchmaker::login(string id, string pass)
+{
+    readtofile("users.txt"); 
+    for (User& u : users)
+    {
+        if (u.getid() == id && u.getpassword() == pass) 
+        {
+            return &u;
+        }
+    }
+    return nullptr;
+}
 
-
+vector<pair<double, User>> Matchmaker::findmatchesforme(User* me)
+{
+    int pref_idx;
+    for (int i = 0; i < preferences.size(); ++i)
+    {
+        if (preferences[i].getid() == me->getid()) 
+        {
+            pref_idx = i;
+            break;
+        }
+    }
+    return findmatches(pref_idx);
+}

@@ -137,7 +137,12 @@ User::User()
             cout << "Добавлен интерес: " << interests.back() << endl;
         }
     }
-
+    cout << "Придумайте пароль (до 20 символов): ";
+    cin >> password;
+    if (password.size() > 20)
+    {
+        password = password.substr(0, 20);
+    }
     cout << "\nПрофиль Создан с данными!\n";
     cout << "ID: " << id << " | Пол: " << gender << " | Возраст: " << age << endl;
     cout << "Город: " << city << " | Образование: " << education << endl;
@@ -152,8 +157,7 @@ void User::savetofile(const string& filename)
     ofstream file(filename, ios::app);
     if (file.is_open()) 
     {
-        file << id << " " << city << " " << gender << " " << education << " " << age << " " << interests.size() << endl;
-
+        file << id << " " << city << " " << gender << " " << education << " " << age << " " << interests.size() << " " << password << endl;
         for (string& interest : interests)
         {
             file << interest << endl;
