@@ -30,6 +30,6 @@ public:
     bool gethas_city() { return has_city; }
     bool gethas_edu() { return has_education; }
     bool gethas_interests() { return has_interests; }
-
+    void setid(string i) { id = i; }
 };
 

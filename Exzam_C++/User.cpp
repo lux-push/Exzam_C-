@@ -1,166 +1,174 @@
 #include "User.h"
-#include "MatchMaker.h"
-User::User()
+#include "Matchmaker.h"
+
+User::User(bool inter)
 {
-    
-    cout << "Введите ID пользователя: ";
-    cin >> id;
-    
-    do
+    if(inter)
     {
-        int genderchoice;
-        system("cls");
-        cout << "Выберите пол:\n";
-        cout << "1. M (Мужской)\n";
-        cout << "2. F (Женский)\n";
-        cout << "Ваш выбор (1-2): ";
-        cin >> genderchoice;
-        if (genderchoice == 1)
+        cout << "Введите ID пользователя: ";
+        cin >> id;
+
+        do
         {
-            gender = "M";         
-            break;
-        }
-        else if (genderchoice == 2) 
-        {
-            gender = "F";
-            break;
-        }
-        cout << "Ошибка! Поробуйте еще раз!\n\n";
-    } while (true);
-    do
-    {
-        system("cls");
-        cout << "\nВведите Ваш возраст (1-100): ";
-        cin >> age;
-        if (age < 1 || age > 100)
-        {
-            cout << "Ошибка! Возраст должен быть от 1 до 100 лет\n";
-            age = NULL;
-        }
-        else 
-        { 
+            int genderchoice;
             system("cls");
-            break;
-           
-        }
-    } while (true);
-    int citychoice;
-    cout << "\nВыберите город:\n";
-    cout << "1. Москва\n";
-    cout << "2. Санкт-Петербург\n";
-    cout << "3. Новосибирск\n";
-    cout << "4. Екатеринбург\n";
-    cout << "5. Другой\n";
-    cout << "Ваш выбор (1-5): ";
-    cin >> citychoice;
-
-    switch (citychoice)
-    {
-    case 1:
-    {
-        city = "Москва";
-        break;
-    }
-    case 2:
-    {
-        city = "Санкт-Петербург";
-        break;
-    }
-    case 3:
-    {
-        city = "Новосибирск";
-        break;
-    }
-    case 4: 
-    {
-        city = "Екатеринбург";
-        break;
-    }
-    case 5:
-    {
-        cout << "Введите Ваш город: ";
-        cin.ignore(1000, '\n');
-        getline(cin, city);
-        if (city.empty()) city = "Не указан";
-        break;
-    }
-    }
-    system("cls");
-    int educhoice;
-    cout << "\nВыберите образование:\n";
-    cout << "1. Среднее\n";
-    cout << "2. Среднее специальное\n";
-    cout << "3. Высшее\n";
-    cout << "4. Два высших\n";
-    cout << "Ваш выбор (1-4): ";
-    cin >> educhoice;
-
-    switch (educhoice) 
-    {
-    case 1:
-    {
-        education = "Среднее";
-        break;
-    }
-    case 2:
-    {
-        education = "Среднее специальное"; 
-        break;
-    }
-    case 3:
-    {
-        education = "Высшее";
-        break;
-    }
-    case 4:
-    {
-        education = "Два высших";
-        break;
-    }
-    
-    } 
-    system("cls");
-   
-    int interestcount;
-    cout << "\nСколько интересов у вас есть? (0-10): ";
-    cin >> interestcount;
-
-    if (interestcount < 0) 
-    {
-        interestcount = 0;
-    }
-    if (interestcount > 10)
-    {
-        interestcount = 10;
-    }
-    interests.clear();
-    for (int i = 0; i < interestcount; i++)
-    {
-        string interest;
-        cout << "Интерес #" << (i + 1) << ": ";
-        cin >> interest;
-        if (interest.size() > 10)
+            cout << "Выберите пол:\n";
+            cout << "1. M (Мужской)\n";
+            cout << "2. F (Женский)\n";
+            cout << "Ваш выбор (1-2): ";
+            cin >> genderchoice;
+            if (genderchoice == 1)
+            {
+                gender = "M";
+                break;
+            }
+            else if (genderchoice == 2)
+            {
+                gender = "F";
+                break;
+            }
+            cout << "Ошибка! Поробуйте еще раз!\n\n";
+        } while (true);
+        do
         {
-            interest.resize(10);  
+            system("cls");
+            cout << "\nВведите Ваш возраст (1-100): ";
+            cin >> age;
+            if (age < 1 || age > 100)
+            {
+                cout << "Ошибка! Возраст должен быть от 1 до 100 лет\n";
+                age = NULL;
+            }
+            else
+            {
+                system("cls");
+                break;
+
+            }
+        } while (true);
+        int citychoice;
+        cout << "\nВыберите город:\n";
+        cout << "1. Москва\n";
+        cout << "2. Санкт-Петербург\n";
+        cout << "3. Новосибирск\n";
+        cout << "4. Екатеринбург\n";
+        cout << "5. Другой\n";
+        cout << "Ваш выбор (1-5): ";
+        cin >> citychoice;
+
+        switch (citychoice)
+        {
+        case 1:
+        {
+            city = "Москва";
+            break;
         }
-        interests.push_back(interest);
-        cout << "Добавлен: " << interests.back() << endl;
+        case 2:
+        {
+            city = "Санкт-Петербург";
+            break;
+        }
+        case 3:
+        {
+            city = "Новосибирск";
+            break;
+        }
+        case 4:
+        {
+            city = "Екатеринбург";
+            break;
+        }
+        case 5:
+        {
+            cout << "Введите Ваш город: ";
+            cin.ignore(1000, '\n');
+            getline(cin, city);
+            if (city.empty()) city = "Не указан";
+            break;
+        }
+        }
+        system("cls");
+        int educhoice;
+        cout << "\nВыберите образование:\n";
+        cout << "1. Среднее\n";
+        cout << "2. Среднее специальное\n";
+        cout << "3. Высшее\n";
+        cout << "4. Два высших\n";
+        cout << "Ваш выбор (1-4): ";
+        cin >> educhoice;
+
+        switch (educhoice)
+        {
+        case 1:
+        {
+            education = "Среднее";
+            break;
+        }
+        case 2:
+        {
+            education = "Среднее специальное";
+            break;
+        }
+        case 3:
+        {
+            education = "Высшее";
+            break;
+        }
+        case 4:
+        {
+            education = "Два высших";
+            break;
+        }
+
+        }
+        system("cls");
+
+        int interestcount;
+        cout << "\nСколько интересов у вас есть? (0-10): ";
+        cin >> interestcount;
+
+        if (interestcount < 0)
+        {
+            interestcount = 0;
+        }
+        if (interestcount > 10)
+        {
+            interestcount = 10;
+        }
+        interests.clear();
+        for (int i = 0; i < interestcount; i++)
+        {
+            string interest;
+            cout << "Интерес #" << (i + 1) << ": ";
+            cin >> interest;
+            if (interest.size() > 10)
+            {
+                interest.resize(10);
+            }
+            interests.push_back(interest);
+            cout << "Добавлен: " << interests.back() << endl;
+        }
+        system("cls");
+        cout << "Придумайте пароль (до 20 символов): ";
+        cin >> password;
+        if (password.size() > 20)
+        {
+            password.resize(20);
+        }
+        system("cls");
+        cout << "\nПрофиль Создан с данными!\n";
+        cout << "ID: " << id << " | Пол: " << gender << " | Возраст: " << age << endl;
+        cout << "Город: " << city << " | Образование: " << education << endl;
+        cout << "Интересов: " << interests.size() << endl;
+        cout << "=====================================\n\n";
+        cout << "Нажмите Enter для продолжения...\n";
+        cin.get();
+        system("cls");
     }
-    system("cls");
-    cout << "Придумайте пароль (до 20 символов): ";
-    cin >> password;
-    if (password.size() > 20)
+    else
     {
-        password.resize(20);
+        id = "empty";
     }
-    system("cls");
-    cout << "\nПрофиль Создан с данными!\n";
-    cout << "ID: " << id << " | Пол: " << gender << " | Возраст: " << age << endl;
-    cout << "Город: " << city << " | Образование: " << education << endl;
-    cout << "Интересов: " << interests.size() << endl;
-    cout << "=====================================\n\n";
-    system("pause"); 
-    system("cls");    
 }
 void User::savetofile(const string& filename)
 {
@@ -184,4 +192,77 @@ void User::savetofile(const string& filename)
 void User::save()
 {
     savetofile("users.txt");
+}
+void User::addlike(string user_id)
+{
+    if (!haslike(user_id))
+    {
+        likes.push_back(user_id);
+        cout << "Добавлен лайк: " << user_id << endl;
+    }
+    else
+    {
+        cout << " Уже лайкали этого пользователя!\n";
+    }
+}
+void User::removelike(string user_id)
+{
+    for (int i = 0; i < likes.size(); i++) 
+    {
+        if (likes[i] == user_id)
+        {
+            likes.erase(likes.begin() + i);
+            cout << "Лайк удалён: " << user_id << endl;           
+        }
+    }
+    cout << "Лайк не найден\n";
+}
+bool User::haslike(string user_id)
+{
+    for (string& liked : likes)
+    {
+        if (liked == user_id)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+void User::savelikestofile(const string& filen)
+{
+    ofstream file(filen, ios::app);
+    if (!file.is_open()) return;
+
+    file << id << " " << city << " " << gender << " " << education << " " << age << " " << interests.size() << " " << password << " " << likes.size() << endl;
+
+    for (string& interest : interests)
+    {
+        file << interest << endl;
+    }
+    for (string& liked_id : likes) 
+    {
+        file << "LIKE:" << liked_id << endl;
+    }
+
+    file.close();
+}
+void User::loadlikes(ifstream& file, int count)
+{
+    likes.clear();
+
+    for (int i = 0; i < count; i++)
+    {
+        string line;
+        if (getline(file, line) && !line.empty())
+        {          
+            if (line.rfind("LIKE:", 0) == 0)//rfind = ищет где первое вхождение like возвращая позицию откуда читать
+            {
+                string liked_id = line.substr(5);// обрезаем лайк
+                if (!liked_id.empty())
+                {
+                    likes.push_back(liked_id);
+                }
+            }
+        }
+    }
 }

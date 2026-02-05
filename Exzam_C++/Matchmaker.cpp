@@ -10,7 +10,7 @@ Matchmaker::Matchmaker(bool auto_init )
         for (int i = 0; i < usercount; i++)
         {
             cout << "\nПользователь #" << (i + 1) << ":\n";
-            User newuser;
+            User newuser(true);
             users.push_back(newuser);
         }
 
@@ -29,7 +29,12 @@ Matchmaker::Matchmaker(bool auto_init )
         system("pause");
     }
 }
-
+void Matchmaker::create_pref()
+{
+    cout << "\n--- Создание предпочтений ---\n";  
+    Preference newpref;
+    preferences.push_back(newpref);
+}
 vector<pair<double, string>> Matchmaker::findmatches(int ind)
 {
     vector<pair<double, string>> matches;
@@ -56,23 +61,20 @@ void Matchmaker::showmatchs()
     for (int i = 0; i < preferences.size(); i++)
     {
         cout << "Для " << preferences[i].getid() << ":\n";
-        for (int i = 0; i < preferences.size(); i++)
+        auto matches = findmatches(i);
+        if (matches.empty())
         {
-            cout << "Для " << preferences[i].getid() << ":\n";
-            auto matches = findmatches(i);
-                if (matches.empty())
-                {
-                    cout << "  Нет подходящих кандидатов\n";
-                }
-                else 
-                {
-                    for (int j = 0; j < matches.size(); j++)
-                    {                      
-                        cout << "  " << (j + 1) << ". " << matches[j].second << " (score: " << matches[j].first << ")\n";
-                    }
-                }
-            cout << "\n";
+            cout << "  Нет подходящих кандидатов\n";
         }
+        else
+        {
+            for (int j = 0; j < matches.size(); j++)
+            {
+                cout << "  " << (j + 1) << ". " << matches[j].second << " (score: " << matches[j].first << ")\n";
+            }
+        }
+        cout << "\n";
+
     }
 }
 double Matchmaker::calculate(User& candidate, Preference& pref)//подсчет баллов то есть по совпадением по которым мы потом вычислем лучших и худших
@@ -117,8 +119,7 @@ void Matchmaker::readtofile(const string& filename)
         cout << "Ошибка открытия файла: " << filename << endl;
     }  
     string line;
-    getline(file, line);
-
+    users.clear();
     while (getline(file, line)) 
     {
         if (line.empty())
@@ -127,15 +128,21 @@ void Matchmaker::readtofile(const string& filename)
         }
 
         stringstream ss(line);
-        User u;
+        User u(false);
         string id, city, gender, education, password;
-        int age, interest_count;
+        int age, interest_count, likes_count = 0;
 
         if (!(ss >> id >> city >> gender >> education >> age >> interest_count >> password))
         {
             continue;
         }
-        u.setid(id); u.setcity(city);
+        if (!ss >> likes_count)
+        {
+            likes_count = 0;
+        }
+
+        u.setid(id);
+        u.setcity(city);
         u.setgender(gender);
         u.seteducation(education);
         u.setage(age);
@@ -153,6 +160,7 @@ void Matchmaker::readtofile(const string& filename)
                 u.getinterests().push_back(line);
             }
         }
+        u.loadlikes(file, likes_count);
         users.push_back(u);
     }
     cout << "Загружено " << users.size() << " пользователей!" << endl;
@@ -161,7 +169,7 @@ void Matchmaker::readtofile(const string& filename)
 
 void Matchmaker::showfullusers()
 {
-    for (size_t i = 0; i < users.size(); ++i)
+    for (int i = 0; i < users.size(); ++i)
     {
         User& u = users[i];     
         cout << "\n[" << (i + 1) << "] ID: " << u.getid() << " | Пол: " << u.getgender() << " | Возраст: " << u.getage() << endl;
@@ -170,7 +178,7 @@ void Matchmaker::showfullusers()
         cout << " Интересы (" << interests.size() << "): ";
         if (!interests.empty()) 
         {
-            for (size_t j = 0; j < interests.size(); ++j)
+            for (int j = 0; j < interests.size(); ++j)
             {
                 cout << interests[j];
                 if (j < interests.size() - 1) cout << ", ";
@@ -204,7 +212,7 @@ User* Matchmaker::login(string id, string pass)
 
 vector<pair<double, string>> Matchmaker::findmatchesforme(User* me)
 {
-    int pref_idx;
+    int pref_idx = 0;
     for (int i = 0; i < preferences.size(); ++i)
     {
         if (preferences[i].getid() == me->getid()) 
@@ -225,6 +233,60 @@ vector<pair<double, string>> Matchmaker::findmatchesbyid(string user_id)
             pref_idx = i;
             break;
         }
+        if (pref_idx == -1)
+        {
+            cout << "Предпочтения для " << user_id << " не найдены!\n";
+        }
     }
     return findmatches(pref_idx);
+}
+void Matchmaker::unlikeuser(string from_id, string to_id)
+{
+    for (User& user : users)
+    {
+        if (user.getid() == from_id)
+        {
+            user.removelike(to_id);
+            return;
+        }
+    }
+    cout << "Пользователь " << from_id << " не найден!\n";
+}
+void Matchmaker::likeuser(string from_id, string to_id)
+{
+    for (User& user : users)
+    {
+        if (user.getid() == from_id)
+        {
+            user.addlike(to_id);
+            return;
+        }
+    }
+    cout << "Пользователь " << from_id << " не найден!\n";
+}
+void Matchmaker::showmylikes(string user_id)
+{
+    print_banner(" Лайки " + user_id);
+    cout << "====================== ВАШИ ЛАЙКИ =======================\n";
+
+    for (User& user : users)
+    {
+        if (user.getid() == user_id) 
+        {
+            cout << "=  Всего лайков: " << user.getlikes().size() << "                 =\n";
+            if (user.getlikes().empty())
+            {
+                cout << "=  Пока нет лайков...                              =\n";
+            }
+            else
+            {
+                for (int i = 0; i < user.getlikes().size(); i++)
+                {
+                    cout << "= " << (i + 1) << ".  " << user.getlikes()[i] << "                 =\n";
+                }
+            }
+            break;
+        }
+    }
+    cout << "========================================================\n";
 }

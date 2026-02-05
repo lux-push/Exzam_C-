@@ -1,14 +1,15 @@
 #pragma once
 #include "Header_Includs.h"
+#include "Funct_Main.h"
 class User
 {
 private:
-	string id, city, gender, education, password;
-	int age;
-	vector<string> interests;
-
+    string id, city, gender, education, password;
+    int age;
+    vector<string> interests;
+    vector<string> likes;
 public:
-    User();
+    User(bool inter);
     string getid() { return id; }
     string getcity() { return city; }
     string getgender() { return gender; }
@@ -25,4 +26,10 @@ public:
     string getpassword() { return password; }
     void setpassword(string p) { password = p; }
     void save();
+    vector<string>& getlikes() { return likes; }
+    void addlike(string user_id);
+    void removelike(string user_id);
+    bool haslike(string user_id);
+    void savelikestofile(const string& file);
+    void loadlikes(ifstream& file, int count);
 };
