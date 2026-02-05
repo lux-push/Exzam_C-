@@ -14,11 +14,12 @@ public:
     vector<User> getusers() { return users; }
     void adduser(User& user) { users.push_back(user); }
     void addpref(Preference& pref) { preferences.push_back(pref); }
-    vector<pair<double, User>> findmatches(int ind);
+    vector<pair<double, string>> findmatches(int ind);
     void showmatchs();
     double calculate(User& candidate,Preference& pref);
     void readtofile(const string& filename);
     void showfullusers();
     User* login(string id, string pasw);
-    vector<pair<double, User>> findmatchesforme(User* me);
+    vector<pair<double, string>> findmatchesforme(User* me);
+    vector<pair<double, string>> findmatchesbyid(string user_id);
 };

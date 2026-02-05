@@ -1,9 +1,10 @@
 #include "User.h"
-
+#include "MatchMaker.h"
 User::User()
 {
     
-    cout << "Введите ID пользователя: "; cin >> id;
+    cout << "Введите ID пользователя: ";
+    cin >> id;
     
     do
     {
@@ -34,6 +35,7 @@ User::User()
         if (age < 1 || age > 100)
         {
             cout << "Ошибка! Возраст должен быть от 1 до 100 лет\n";
+            age = NULL;
         }
         else 
         { 
@@ -77,8 +79,8 @@ User::User()
     case 5:
     {
         cout << "Введите Ваш город: ";
+        cin.ignore(1000, '\n');
         getline(cin, city);
-        cin.ignore();
         if (city.empty()) city = "Не указан";
         break;
     }
@@ -123,51 +125,63 @@ User::User()
     cout << "\nСколько интересов у вас есть? (0-10): ";
     cin >> interestcount;
 
-    if (interestcount < 0) interestcount = 0;
-    if (interestcount > 10) interestcount = 10;
+    if (interestcount < 0) 
+    {
+        interestcount = 0;
+    }
+    if (interestcount > 10)
+    {
+        interestcount = 10;
+    }
     interests.clear();
     for (int i = 0; i < interestcount; i++)
     {
         string interest;
-        cout << "Интерес #" << (i + 1) << " : ";    
+        cout << "Интерес #" << (i + 1) << ": ";
         cin >> interest;
-        if (interest.size() <= 10 && interest.size() >= 0)
+        if (interest.size() > 10)
         {
-            interests.push_back(interest);
-            cout << "Добавлен интерес: " << interests.back() << endl;
+            interest.resize(10);  
         }
+        interests.push_back(interest);
+        cout << "Добавлен: " << interests.back() << endl;
     }
+    system("cls");
     cout << "Придумайте пароль (до 20 символов): ";
     cin >> password;
     if (password.size() > 20)
     {
-        password = password.substr(0, 20);
+        password.resize(20);
     }
+    system("cls");
     cout << "\nПрофиль Создан с данными!\n";
     cout << "ID: " << id << " | Пол: " << gender << " | Возраст: " << age << endl;
     cout << "Город: " << city << " | Образование: " << education << endl;
     cout << "Интересов: " << interests.size() << endl;
-    savetofile("users.txt");
     cout << "=====================================\n\n";
-    system("pause");
-    system("cls");
+    system("pause"); 
+    system("cls");    
 }
 void User::savetofile(const string& filename)
 {
     ofstream file(filename, ios::app);
-    if (file.is_open()) 
+    if (!file.is_open())
     {
-        file << id << " " << city << " " << gender << " " << education << " " << age << " " << interests.size() << " " << password << endl;
-        for (string& interest : interests)
-        {
-            file << interest << endl;
-        }
-        file.close();
-        cout << "Пользователь " << id << " сохранён в " << filename << endl;     
+        cout << "Ошибка открытия файла: " << filename << endl;
+        return;
     }
-    else
-    {
 
-        cout << "Ошибка открытия файла!\n";
+    file << id << " " << city << " " << gender << " " << education << " " << age << " " << interests.size() << " " << password << endl;
+
+    for (string& interest : interests) 
+    {
+        file << interest << endl;
     }
+
+    file.close();
+    cout << "Пользователь " << id << " сохранён в " << filename << endl;
+}
+void User::save()
+{
+    savetofile("users.txt");
 }

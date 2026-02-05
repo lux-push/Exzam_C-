@@ -2,7 +2,7 @@
 
 Preference::Preference()
 {
-    
+
     cout << "Введите ID пользователя: "; cin >> id;
     int genderchoice;
     cout << "\nЖелаемый пол партнера (0=пропустить):\n";
@@ -22,7 +22,6 @@ Preference::Preference()
         pref_gender = "F";
         has_gender = true;
     }
-    system("pause");
     system("cls");
     int agechoice;
     cout << "\nВозраст партнера:\n";
@@ -39,22 +38,48 @@ Preference::Preference()
     case 3: pref_age_min = 35; pref_age_max = 50; has_age = true; break;
     case 0: has_age = false; break;
     }
-    system("pause");
     system("cls");
     int citychoice;
     cout << "\nЖелаемый город партнера:\n";
     cout << "1. Москва\n";
     cout << "2. Санкт-Петербург\n";
-    cout << "3. Любой\n";
-    cout << "Ваш выбор: ";
+    cout << "3. Новосибирск\n";
+    cout << "4. Екатеринбург\n";
+    cout << "5. Другой\n";
+    cout << "Ваш выбор (1-5): ";
     cin >> citychoice;
     switch (citychoice)
     {
-    case 1: pref_city = "Москва"; has_city = true; break;
-    case 2: pref_city = "Санкт-Петербург"; has_city = true; break;
-    case 3: break;
+    case 1:
+    {
+        pref_city = "Москва";
+        break;
     }
-    system("pause");
+    case 2:
+    {
+        pref_city = "Санкт-Петербург";
+        break;
+    }
+    case 3:
+    {
+        pref_city = "Новосибирск";
+        break;
+    }
+    case 4:
+    {
+        pref_city = "Екатеринбург";
+        break;
+    }
+    case 5:
+    {
+        cout << "Введите Ваш город: ";
+        cin.ignore(1000, '\n');
+        getline(cin, pref_city);
+        if (pref_city.empty()) pref_city = "Не указан";
+        break;
+    }
+
+
     system("cls");
     int educhoice;
     cout << "\nЖелаемое образование партнера:\n";
@@ -69,7 +94,6 @@ Preference::Preference()
     case 2: pref_education = "Высшее"; has_education = true; break;
     case 3: has_education = false; break;
     }
-    system("pause");
     system("cls");
     int interestCount;
     cout << "\nСколько интересов должно быть у партнера? (0=пропустить): ";
@@ -79,12 +103,14 @@ Preference::Preference()
     {
         pref_interests.clear();
         cout << "Введите " << interestCount << " интерес(ов):\n";
-        for (int i = 0; i < interestCount; i++) {
+        for (int i = 0; i < interestCount; i++)
+        {
             cout << "Интерес #" << (i + 1) << ": ";
             string interest;
             cin.ignore();
             getline(cin, interest);
-            if (!interest.empty()) {
+            if (!interest.empty())
+            {
                 pref_interests.push_back(interest);
             }
         }
@@ -94,7 +120,6 @@ Preference::Preference()
     {
         has_interests = false;
     }
-    system("pause");
     system("cls");
 
     cout << "\n Мы учли ваши предпочтения!\n";
@@ -105,6 +130,8 @@ Preference::Preference()
     if (has_education == true) cout << "Образование: " << pref_education << endl;
     if (has_interests == true) cout << "Интересов: " << pref_interests.size() << endl;
     cout << "=============================\n\n";
+    system("pause");
+    }
 }
 
 

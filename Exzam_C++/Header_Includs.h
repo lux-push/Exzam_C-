@@ -17,11 +17,11 @@
 #include <locale.h>
 #include <map>
 #include <algorithm>
-#include <alg.h>
 #include <set>
 #include <io.h>
 #include <direct.h>
 #include <clocale>
+
 using namespace std;
 
 //srand(time(NULL));

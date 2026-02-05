@@ -14,7 +14,7 @@ public:
     string getgender() { return gender; }
     string geteducation() { return education; }
     int getage() { return age; }
-    vector<string> getinterests() { return interests; }
+    vector<string>& getinterests() { return interests; }
     void setid(string i) { id = i; }
     void setcity(string c) { city = c; }
     void setgender(string g) { gender = g; }
@@ -24,5 +24,5 @@ public:
     void savetofile(const string& filename);
     string getpassword() { return password; }
     void setpassword(string p) { password = p; }
+    void save();
 };
-

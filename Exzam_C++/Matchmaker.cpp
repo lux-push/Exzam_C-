@@ -1,5 +1,4 @@
 #include "Matchmaker.h"
-vector<User> users = {};
 Matchmaker::Matchmaker(bool auto_init )
 {
     if(auto_init)
@@ -31,18 +30,21 @@ Matchmaker::Matchmaker(bool auto_init )
     }
 }
 
-vector<pair<double, User>> Matchmaker::findmatches(int ind)
+vector<pair<double, string>> Matchmaker::findmatches(int ind)
 {
-    vector<pair<double, User>> matches;
+    vector<pair<double, string>> matches;
     Preference& pref = preferences[ind];
     
     for (User& candidate : users) 
     {     
-        if (candidate.getid() == pref.getid()) continue;
+        if (candidate.getid() == pref.getid()) 
+        {
+            continue;
+        }
         double score = calculate(candidate, pref);
         if (score > 0)
         {
-            matches.emplace_back(score, candidate);
+            matches.push_back(make_pair(score, candidate.getid()));
         }
     }
     sort(matches.rbegin(), matches.rend());
@@ -54,52 +56,57 @@ void Matchmaker::showmatchs()
     for (int i = 0; i < preferences.size(); i++)
     {
         cout << "Для " << preferences[i].getid() << ":\n";
-        auto matches = findmatches(i);
-        for (int j = 0; j < min(3, (int)matches.size()); j++)
+        for (int i = 0; i < preferences.size(); i++)
         {
-            cout << "  " << (j + 1) << ". " << matches[j].second.getid() << " (score: " << fixed << setprecision(0) << matches[j].first << ")\n";
+            cout << "Для " << preferences[i].getid() << ":\n";
+            auto matches = findmatches(i);
+                if (matches.empty())
+                {
+                    cout << "  Нет подходящих кандидатов\n";
+                }
+                else 
+                {
+                    for (int j = 0; j < matches.size(); j++)
+                    {                      
+                        cout << "  " << (j + 1) << ". " << matches[j].second << " (score: " << matches[j].first << ")\n";
+                    }
+                }
+            cout << "\n";
         }
-        cout << "\n";
     }
 }
-
 double Matchmaker::calculate(User& candidate, Preference& pref)//подсчет баллов то есть по совпадением по которым мы потом вычислем лучших и худших
 {
     double score = 0.0;
-
     if (pref.gethas_gen() && candidate.getgender() == pref.getgen())
     {
         score += 40;
     }
-    if (candidate.getage() >= pref.getagemin() && candidate.getage() <= pref.getagemax())
+
+    if (pref.gethas_age() && candidate.getage() >= pref.getagemin() && candidate.getage() <= pref.getagemax())
     {
         score += 30;
     }
-    if (pref.gethas_city() || candidate.getcity() == pref.getcity())
+    if (pref.gethas_city() && candidate.getcity() == pref.getcity())
     {
         score += 20;
     }
-
-    if (!pref.gethas_edu() && candidate.geteducation() == pref.getedu())
+    if (pref.gethas_edu() && candidate.geteducation() == pref.getedu())
     {
         score += 15;
     }
 
-    const auto& userinterests = candidate.getinterests();
-    const auto& prefinterests = pref.getprefinterests();
-
-    for (const string& pinterest : prefinterests)
+    for (string& pinterest : pref.getprefinterests())
     {
-        for (const string& uinterest : userinterests) 
+        for (string& uinterest : candidate.getinterests())
         {
-            if (pinterest == uinterest) 
+            if (pinterest == uinterest)
             {
                 score += 10;
-                break;  
+                break;
             }
         }
     }
-
     return score;
 }
 void Matchmaker::readtofile(const string& filename)
@@ -108,55 +115,50 @@ void Matchmaker::readtofile(const string& filename)
     if (!file.is_open())
     {
         cout << "Ошибка открытия файла: " << filename << endl;
-    }
+    }  
     string line;
-    if (!getline(file, line))
-    {
-        cerr << "Пустой файл или ошибка чтения" << endl;
-        file.close();
-    }
-    users.clear();  
+    getline(file, line);
 
-    stringstream ss(line);
-    int user_count;
-    ss >> user_count;
-    cout << "Загружаем " << user_count << " пользователей " << endl;
-
-    for (int i = 0; i < user_count; ++i)
+    while (getline(file, line)) 
     {
-        User u;
-        u.getinterests().clear();
-        for (int j = 0; j < user_count; ++j) 
+        if (line.empty())
         {
-            if (!getline(file, line))
+            continue;
+        }
+
+        stringstream ss(line);
+        User u;
+        string id, city, gender, education, password;
+        int age, interest_count;
+
+        if (!(ss >> id >> city >> gender >> education >> age >> interest_count >> password))
+        {
+            continue;
+        }
+        u.setid(id); u.setcity(city);
+        u.setgender(gender);
+        u.seteducation(education);
+        u.setage(age);
+        u.setpassword(password);
+        u.getinterests().clear();
+
+        for (int i = 0; i < interest_count; ++i)
+        {
+            if (getline(file, line) && !line.empty())
             {
-                cout << "Ошибка чтения пользователя #" << (i + 1) << endl;
-                break;
-            }
-            stringstream ss_line(line); // удобный разбор для чтения с файла чтоб просто разобрать строчки
-            string id, city, gender, education, pasw;
-            int age, interests_count;
-            ss_line >> id >> city >> gender >> education >> age >> interests_count >> pasw;//разбираем строчку на отдельные данные по пробелам         
-            u.setid(id);
-            u.setcity(city);
-            u.setgender(gender);
-            u.seteducation(education);
-            u.setage(age);
-            u.setpassword(pasw);
-            if (getline(file, line))
-            {       
-                if (!line.empty())
+                if (line.size() > 20)
                 {
-                    u.getinterests().push_back(line);
+                    line.resize(20);
                 }
+                u.getinterests().push_back(line);
             }
         }
-        
+        users.push_back(u);
     }
-
-    file.close();
-    cout << "Загружено " << users.size() << "/" << user_count << " пользователей в вектор users" << endl;
+    cout << "Загружено " << users.size() << " пользователей!" << endl;
+        
 }
+
 void Matchmaker::showfullusers()
 {
     for (size_t i = 0; i < users.size(); ++i)
@@ -190,7 +192,6 @@ void Matchmaker::showfullusers()
 
 User* Matchmaker::login(string id, string pass)
 {
-    readtofile("users.txt"); 
     for (User& u : users)
     {
         if (u.getid() == id && u.getpassword() == pass) 
@@ -201,12 +202,25 @@ User* Matchmaker::login(string id, string pass)
     return nullptr;
 }
 
-vector<pair<double, User>> Matchmaker::findmatchesforme(User* me)
+vector<pair<double, string>> Matchmaker::findmatchesforme(User* me)
 {
     int pref_idx;
     for (int i = 0; i < preferences.size(); ++i)
     {
         if (preferences[i].getid() == me->getid()) 
+        {
+            pref_idx = i;
+            break;
+        }
+    }
+    return findmatches(pref_idx);
+}
+vector<pair<double, string>> Matchmaker::findmatchesbyid(string user_id)
+{
+    int pref_idx = -1;
+    for (int i = 0; i < preferences.size(); i++)
+    {
+        if (preferences[i].getid() == user_id)
         {
             pref_idx = i;
             break;

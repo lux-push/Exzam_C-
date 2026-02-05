@@ -21,7 +21,7 @@ public:
     string getid() { return id; }
     string getgen() { return pref_gender; }
     string getcity() { return pref_city; }
-    vector<string> getprefinterests() { return pref_interests; }
+    vector<string>& getprefinterests() { return pref_interests; }
     string getedu() { return pref_education; }
     int getagemin() { return pref_age_min; }
     int getagemax() { return pref_age_max; }
