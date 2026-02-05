@@ -2,7 +2,7 @@
 #include "Header_Includs.h"
 #include "User.h"
 #include "Preference.h"
-#include "Funct_Main.h"
+
 class Matchmaker
 {
 private:
@@ -20,7 +20,7 @@ public:
     User* login(string id, string pasw);           
     vector<pair<double, string>> findmatches(int ind);
     vector<pair<double, string>> findmatchesbyid(string user_id);
-    vector<pair<double, string>> findmatchesforme(User* me);  
+    vector<pair<double, string>> findmatchesforme(User* me);
 
     void showmatchs();
     double calculate(User& candidate, Preference& pref);

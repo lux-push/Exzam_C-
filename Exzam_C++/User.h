@@ -1,6 +1,6 @@
 #pragma once
 #include "Header_Includs.h"
-#include "Funct_Main.h"
+
 class User
 {
 private:
@@ -33,3 +33,6 @@ public:
     void savelikestofile(const string& file);
     void loadlikes(ifstream& file, int count);
 };
+extern void print_banner(const string& title);
+extern void show_menu(string& current_user);
+extern void show_matches(vector<pair<double, string>>& matches, string& for_user);

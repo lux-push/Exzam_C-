@@ -5,17 +5,19 @@ User::User(bool inter)
 {
     if(inter)
     {
-        cout << "Введите ID пользователя: ";
+        cout << "====================== Основнные Данные ======================\n";
+        cout << "= ID пользователя: ";
         cin >> id;
 
         do
         {
             int genderchoice;
             system("cls");
-            cout << "Выберите пол:\n";
-            cout << "1. M (Мужской)\n";
-            cout << "2. F (Женский)\n";
-            cout << "Ваш выбор (1-2): ";
+            print_banner("Выбор Пола!");
+            cout << "=======================\n";
+            cout << "= 1. M (Мужской)\n";
+            cout << "= 2. F (Женский)\n";
+            cout << "= Выбор (1-2): ";
             cin >> genderchoice;
             if (genderchoice == 1)
             {
@@ -32,11 +34,13 @@ User::User(bool inter)
         do
         {
             system("cls");
-            cout << "\nВведите Ваш возраст (1-100): ";
+            print_banner("Возраст!");
+            cout << "==========\n";
+            cout << "= Введите возраст (1-100): ";
             cin >> age;
             if (age < 1 || age > 100)
             {
-                cout << "Ошибка! Возраст должен быть от 1 до 100 лет\n";
+                cout << "= Ошибка! Возраст должен быть от 1 до 100 лет\n";
                 age = NULL;
             }
             else
@@ -47,13 +51,14 @@ User::User(bool inter)
             }
         } while (true);
         int citychoice;
-        cout << "\nВыберите город:\n";
-        cout << "1. Москва\n";
-        cout << "2. Санкт-Петербург\n";
-        cout << "3. Новосибирск\n";
-        cout << "4. Екатеринбург\n";
-        cout << "5. Другой\n";
-        cout << "Ваш выбор (1-5): ";
+        print_banner("Выбор Города!");
+        cout << "==================\n";
+        cout << "= 1. Москва\n";
+        cout << "= 2. Санкт-Петербург\n";
+        cout << "= 3. Новосибирск\n";
+        cout << "= 4. Екатеринбург\n";
+        cout << "= 5. Другой\n";
+        cout << "= Выбор (1-5): ";
         cin >> citychoice;
 
         switch (citychoice)
@@ -80,7 +85,7 @@ User::User(bool inter)
         }
         case 5:
         {
-            cout << "Введите Ваш город: ";
+            cout << "= Введите город: ";
             cin.ignore(1000, '\n');
             getline(cin, city);
             if (city.empty()) city = "Не указан";
@@ -89,12 +94,13 @@ User::User(bool inter)
         }
         system("cls");
         int educhoice;
-        cout << "\nВыберите образование:\n";
-        cout << "1. Среднее\n";
-        cout << "2. Среднее специальное\n";
-        cout << "3. Высшее\n";
-        cout << "4. Два высших\n";
-        cout << "Ваш выбор (1-4): ";
+        print_banner("Образование!");
+        cout << "==============\n";
+        cout << "= 1. Среднее\n";
+        cout << "= 2. Среднее специальное\n";
+        cout << "= 3. Высшее\n";
+        cout << "= 4. Два высших\n";
+        cout << "= Выбор (1-4): ";
         cin >> educhoice;
 
         switch (educhoice)
@@ -123,8 +129,10 @@ User::User(bool inter)
         }
         system("cls");
 
+        print_banner("Интересы");
+        cout << "==========\n";
         int interestcount;
-        cout << "\nСколько интересов у вас есть? (0-10): ";
+        cout << "= Количество интересов (0-10): ";
         cin >> interestcount;
 
         if (interestcount < 0)
@@ -139,30 +147,35 @@ User::User(bool inter)
         for (int i = 0; i < interestcount; i++)
         {
             string interest;
-            cout << "Интерес #" << (i + 1) << ": ";
+            cout << "= Интерес #" << (i + 1) << ": ";
             cin >> interest;
             if (interest.size() > 10)
             {
                 interest.resize(10);
             }
             interests.push_back(interest);
-            cout << "Добавлен: " << interests.back() << endl;
+            cout << "= Добавлен: " << interests.back() << endl;
         }
         system("cls");
-        cout << "Придумайте пароль (до 20 символов): ";
+        print_banner("Пароль!");
+        cout << "========\n";
+        cout << "= Придумайте пароль (до 20 символов): ";
         cin >> password;
         if (password.size() > 20)
         {
             password.resize(20);
         }
         system("cls");
-        cout << "\nПрофиль Создан с данными!\n";
-        cout << "ID: " << id << " | Пол: " << gender << " | Возраст: " << age << endl;
-        cout << "Город: " << city << " | Образование: " << education << endl;
-        cout << "Интересов: " << interests.size() << endl;
-        cout << "=====================================\n\n";
-        cout << "Нажмите Enter для продолжения...\n";
-        cin.get();
+        print_banner("ПРОФИЛЬ СОЗДАН");
+        cout << "====================== РЕЗУЛЬТАТ ======================\n";
+        cout << "= ID:              " << setw(25) << id << "=\n";
+        cout << "= Пол:             " << setw(25) << gender << "=\n";
+        cout << "= Возраст:         " << setw(25) << age << "=\n";
+        cout << "= Город:           " << setw(25) << city << "=\n";
+        cout << "= Образование:     " << setw(25) << education << "=\n";
+        cout << "= Интересов:       " << interests.size() << "\n";
+        cout << "= ====================================================\n";
+        system("pause");
         system("cls");
     }
     else
@@ -265,4 +278,52 @@ void User::loadlikes(ifstream& file, int count)
             }
         }
     }
+}
+
+
+
+
+
+void print_banner(const string& title)
+{
+    system("cls");
+    cout << "\n";
+    cout << "====================== Сваха ===========================\n";
+    cout << "= " << setw(30) << title << "                       =\n";
+    cout << "========================================================\n\n";
+}
+void show_menu(string& current_user)
+{
+    print_banner("Главное меню - " + current_user);
+    cout << "====================== Выберите Действие ======================\n";
+    cout << "= 1.  Загрузить пользователей                                 =\n";
+    cout << "= 2.  Показать всех пользователей                             =\n";
+    cout << "= 3.  Найти матчи для себя                                    =\n";
+    cout << "= 4.  ТОП-матчи для всех                                      =\n";
+    cout << "= 5.  Мои лайки                                               =\n";
+    cout << "= 6.  Лайкнуть пользователя                                   =\n";
+    cout << "= 7.  Убрать лайк                                             =\n";
+    cout << "= 0.  Выход                                                   =\n";
+    cout << "===============================================================\n";
+    cout << " Ваш выбор: ";
+}
+void show_matches(vector<pair<double, string>>& matches, string& for_user)
+{
+    print_banner(" ТОП-матчи для " + for_user);
+    cout << "====================== РЕЙТИНГ СОВПАДЕНИЙ =====================\n";
+
+    if (matches.empty())
+    {
+        cout << "= Нет подходящих кандидатов                              =\n";
+        cout << "=  Загрузите пользователей и создайте предпочтения!       =\n";
+    }
+    else
+    {
+        for (int i = 0; i < matches.size() && i < 5; i++)
+        {
+            cout << "= " << (i + 1) << ".  " << matches[i].second;
+            cout << " [" << matches[i].first << "%]  =\n";
+        }
+    }
+    cout << "============================================================\n";
 }

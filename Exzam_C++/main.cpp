@@ -3,7 +3,6 @@
 #include "Preference.h"
 #include "Matchmaker.h"
 
-
 int main()
 {  
     
@@ -14,34 +13,44 @@ int main()
         Matchmaker mm;
         string current_user = "";
         int choice_user;
-        cout << "Добро Пожаловать!\n";
-        cout << "1. Войти в Профиль\n";
-        cout << "2. Регистрация Профиля\n";
+        print_banner("Добро пожаловать в СВАХУ");
+
+        cout << "====================== ВЫБОР ДЕЙСТВИЯ ======================\n";
+        cout << "= 1. Войти в профиль                                       =\n";
+        cout << "= 2. Регистрация нового профиля                            =\n";
+        cout << "============================================================\n";
+        cout << "= Выбор: ";
         cin >> choice_user;
         cin.ignore();
         if (choice_user == 2)
         {
+            print_banner("Регистрация!");
             User new_user(true);
             mm.adduser(new_user);                    
             mm.getusers().back().savetofile("users.txt");
             current_user = mm.getusers().back().getid();
-            cout << "Профиль создан и сохранён!\n";
+            print_banner("ПРОФИЛЬ СОЗДАН - " + current_user);
+            cout << "= Профиль сохранён в users.txt                           =\n";
 
-            cout << "\nТеперь создадим ваши предпочтения...\n";
+            print_banner("Создание Препочтений!");
+            cout << "= ======================================================\n";
             Preference new_pref;
             if (new_pref.getid() == current_user)
             {
                 mm.addpref(new_pref);
-                cout << "Предпочтения для " << current_user << " созданы!\n";
+                cout << "= Предпочтения для " << current_user << " созданы!\n";
             }
         }
         else if (choice_user == 1)
         {
             string login_id, login_pass;
-            cout << "ID: ";
+            print_banner("Вход в Профиль!");
+            cout << "====================\n";
+            cout << "= ID: ";
             cin >> login_id;
-            cout << "Пароль: ";
+            cout << "= Пароль: ";
             cin >> login_pass;
+            print_banner("Загрузка Пользователей");
             mm.readtofile("users.txt");
             User* user = mm.login(login_id, login_pass);
             if (user)
@@ -59,7 +68,8 @@ int main()
                 }
                 if (!has_prefs)
                 {
-                    cout << "\nСоздадим ваши предпочтения...\n";
+                    print_banner("Добавление Предпочтений");
+                    cout << "= Создаём предпочтения для " << current_user << "...\n";
                     Preference new_pref;
                     new_pref.setid(current_user);
                     mm.addpref(new_pref);
@@ -68,7 +78,9 @@ int main()
             }
             else 
             {
-                cout << "Ошибка! Пользователь не найден!\n";
+                print_banner("Ошибка Входа!");
+                cout << "= ❌ Пользователь не найден!                               =\n";
+                cout << "= Проверьте ID и пароль                                    =\n";
                 system("pause");
                 return 1;
             }
@@ -153,7 +165,7 @@ int main()
             }
             case 0:
             {
-                cout << "До свидания!\n";
+                print_banner("Досвидания!");
                 ret = 0;
                 break;
             }
@@ -161,10 +173,9 @@ int main()
 
             if (choice != 0) 
             {
-                int again;
-                cout << "Повторить? 1-Да / 0-Нет: ";
-                cin >> again;
-                ret = again;
+                print_banner("Повторить? 1-Да / 0-Нет: ");
+                cout << "= Ваш выбор: ";
+                cin >> ret;          
                 system("cls");
             }
         } while (ret == 1);

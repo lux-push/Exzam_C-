@@ -1,4 +1,5 @@
 #include "Matchmaker.h"
+
 Matchmaker::Matchmaker(bool auto_init )
 {
     if(auto_init)
@@ -289,4 +290,12 @@ void Matchmaker::showmylikes(string user_id)
         }
     }
     cout << "========================================================\n";
+}
+void Matchmaker::adduser(User& user)
+{
+    users.push_back(user);
+}
+void Matchmaker::addpref(Preference& pref)
+{
+    preferences.push_back(pref);
 }

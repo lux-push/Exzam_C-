@@ -2,14 +2,19 @@
 
 Preference::Preference()
 {
-
-    cout << "Введите ID пользователя: "; cin >> id;
     int genderchoice;
-    cout << "\nЖелаемый пол партнера (0=пропустить):\n";
-    cout << "1. M (Мужской)\n";
-    cout << "2. F (Женский)\n";
-    cout << "0. Не важно\n";
-    cout << "Ваш выбор: ";
+    print_banner("Создание предпочтений!");
+
+    cout << "====================== ОСНОВНЫЕ ДАННЫЕ ======================\n";
+    cout << "= ID пользователя: ";
+    cin >> id;
+   
+    print_banner("Желаемый Пол");
+    cout << "==================\n";
+    cout << "= 1. M (Мужской)\n";
+    cout << "= 2. F (Женский)\n";
+    cout << "= 0. Не важно\n";
+    cout << "= Выбор: ";
     cin >> genderchoice;
 
     if (genderchoice == 1)
@@ -24,12 +29,13 @@ Preference::Preference()
     }
     system("cls");
     int agechoice;
-    cout << "\nВозраст партнера:\n";
-    cout << "1. 18-25\n";
-    cout << "2. 25-35\n";
-    cout << "3. 35-50\n";
-    cout << "0. Не важно\n";
-    cout << "Ваш выбор: ";
+    print_banner("Возраст Партнера!");
+    cout << "====================\n";
+    cout << "= 1. 18-25\n";
+    cout << "= 2. 25-35\n";
+    cout << "= 3. 35-50\n";
+    cout << "= 0. Не важно\n";
+    cout << "= Выбор: ";
     cin >> agechoice;
     switch (agechoice)
     {
@@ -40,13 +46,14 @@ Preference::Preference()
     }
     system("cls");
     int citychoice;
-    cout << "\nЖелаемый город партнера:\n";
-    cout << "1. Москва\n";
-    cout << "2. Санкт-Петербург\n";
-    cout << "3. Новосибирск\n";
-    cout << "4. Екатеринбург\n";
-    cout << "5. Другой\n";
-    cout << "Ваш выбор (1-5): ";
+    print_banner("Желаемый Город Партнера!");
+    cout << "==================\n";
+    cout << "= 1. Москва\n";
+    cout << "= 2. Санкт-Петербург\n";
+    cout << "= 3. Новосибирск\n";
+    cout << "= 4. Екатеринбург\n";
+    cout << "= 5. Другой\n";
+    cout << "= Выбор (1-5): ";
     cin >> citychoice;
     switch (citychoice)
     {
@@ -72,7 +79,7 @@ Preference::Preference()
     }
     case 5:
     {
-        cout << "Введите Ваш город: ";
+        cout << "= Введите Ваш город: ";
         cin.ignore(1000, '\n');
         getline(cin, pref_city);
         if (pref_city.empty()) pref_city = "Не указан";
@@ -82,11 +89,12 @@ Preference::Preference()
 
     system("cls");
     int educhoice;
-    cout << "\nЖелаемое образование партнера:\n";
-    cout << "1. Среднее\n";
-    cout << "2. Высшее\n";
-    cout << "3. Любое\n";
-    cout << "Ваш выбор: ";
+    print_banner("Образование партнера!");
+    cout << "======================\n";
+    cout << "= 1. Среднее\n";
+    cout << "= 2. Высшее\n";
+    cout << "= 3. Любое\n";
+    cout << "= Выбор: ";
     cin >> educhoice;
     switch (educhoice)
     {
@@ -95,17 +103,19 @@ Preference::Preference()
     case 3: has_education = false; break;
     }
     system("cls");
+    print_banner("Интересы Партнера!");
+    cout << "====================\n";
     int interestCount;
-    cout << "\nСколько интересов должно быть у партнера? (0=пропустить): ";
+    cout << "= Количество интересов (0=пропустить): ";
     cin >> interestCount;
 
     if (interestCount > 0)
     {
         pref_interests.clear();
-        cout << "Введите " << interestCount << " интерес(ов):\n";
+        cout << "= Введите " << interestCount << " интерес(ов):\n";
         for (int i = 0; i < interestCount; i++)
         {
-            cout << "Интерес #" << (i + 1) << ": ";
+            cout << "= Интерес #" << (i + 1) << ": ";
             string interest;
             cin.ignore();
             getline(cin, interest);
@@ -122,14 +132,15 @@ Preference::Preference()
     }
     system("cls");
 
-    cout << "\n Мы учли ваши предпочтения!\n";
-    cout << "ID: " << id << endl;
-    if (has_gender == true) cout << "Пол: " << pref_gender << endl;
-    if (has_age == true) cout << "Возраст: " << pref_age_min << "-" << pref_age_max << endl;
-    if (has_city == true) cout << "Город: " << pref_city << endl;
-    if (has_education == true) cout << "Образование: " << pref_education << endl;
-    if (has_interests == true) cout << "Интересов: " << pref_interests.size() << endl;
-    cout << "=============================\n\n";
+    print_banner("Предпочтения Созданы!");
+    cout << "====================== РЕЗУЛЬТАТ ======================\n";
+    cout << "= ID: " << setw(25) << id << "=\n";
+    if (has_gender) cout << "= Пол: " << setw(25) << pref_gender << "=\n";
+    if (has_age) cout << "= Возраст: " << pref_age_min << "-" << pref_age_max << "     =\n";
+    if (!pref_city.empty()) cout << "= Город: " << setw(25) << pref_city << "=\n";
+    if (has_education) cout << "= Образование: " << setw(25) << pref_education << "=\n";
+    if (has_interests) cout << "= Интересов: " << pref_interests.size() << "                 =\n";
+    cout << "= ====================================================\n";
     system("pause");
     }
 }
