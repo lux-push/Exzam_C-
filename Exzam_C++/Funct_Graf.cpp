@@ -63,3 +63,81 @@ int svaha_menu(const string& current_user)
     }
 }
 
+bool register_vxod(Matchmaker& mm, string& current_user) 
+{
+    int choice_user;
+    print_banner("Добро пожаловать в СВАХУ");
+
+    cout << "====================== ВЫБОР ДЕЙСТВИЯ ======================\n";
+    cout << "= 1. Войти в профиль                                       =\n";
+    cout << "= 2. Регистрация нового профиля                            =\n";
+    cout << "============================================================\n";
+    cout << "= Выбор: ";
+    cin >> choice_user;
+    cin.ignore();
+    if (choice_user == 2)
+    {
+        print_banner("Регистрация!");
+        User new_user(true);
+        mm.adduser(new_user);
+        mm.getusers().back().savetofile("users.txt");
+        current_user = mm.getusers().back().getid();
+        print_banner("ПРОФИЛЬ СОЗДАН - " + current_user);
+        cout << "= Профиль сохранён в users.txt\n";
+
+        print_banner("Создание Препочтений!");
+        cout << "= ======================================================\n";
+        Preference new_pref;
+        new_pref.setid(current_user);
+        mm.addpref(new_pref);
+        cout << "= Предпочтения для " << current_user << " созданы!\n";
+        return true;
+    }
+    else if (choice_user == 1)
+    {
+        string login_id, login_pass;
+        print_banner("Вход в Профиль!");
+        cout << "====================\n";
+        cout << "= ID: ";
+        cin >> login_id;
+        cout << "= Пароль: ";
+        cin >> login_pass;
+        print_banner("Загрузка Пользователей");
+        mm.readtofile("users.txt");
+        User* user = mm.login(login_id, login_pass);
+        if (user)
+        {
+            current_user = login_id;
+            cout << "Добро пожаловать, " << current_user << "!\n";
+            bool has_prefs = false;
+            for (auto& pref : mm.getpref())
+            {
+                if (pref.getid() == current_user)
+                {
+                    has_prefs = true;
+                    break;
+                }
+            }
+            if (!has_prefs)
+            {
+                print_banner("Добавление Предпочтений");
+                cout << "= Создаём предпочтения для " << current_user << "...\n";
+                Preference new_pref;
+                new_pref.setid(current_user);
+                mm.addpref(new_pref);
+                cout << "Предпочтения созданы!\n";
+            }
+            return true;
+        }
+        else
+        {
+            print_banner("Ошибка Входа!");
+            cout << "= Пользователь не найден!\n";
+            cout << "= Проверьте ID и пароль\n";
+            system("pause");
+            return false;
+        }
+    }
+    return false;
+
+}

@@ -29,5 +29,5 @@ public:
     void showmylikes(string user_id);     
     void likeuser(string from_id, string to_id);
     void unlikeuser(string from_id, string to_id);
-
+    void userakk();
 };
