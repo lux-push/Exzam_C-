@@ -123,12 +123,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Funct_Graf.h" />
     <ClInclude Include="Header_Includs.h" />
     <ClInclude Include="Matchmaker.h" />
     <ClInclude Include="Preference.h" />
     <ClInclude Include="User.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Funct_Graf.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Matchmaker.cpp" />
     <ClCompile Include="Preference.cpp" />

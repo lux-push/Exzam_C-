@@ -21,6 +21,7 @@
 #include <io.h>
 #include <direct.h>
 #include <clocale>
+#include <conio.h>
 
 using namespace std;
 

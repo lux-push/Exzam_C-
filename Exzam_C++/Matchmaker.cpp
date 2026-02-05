@@ -141,7 +141,17 @@ void Matchmaker::readtofile(const string& filename)
         {
             likes_count = 0;
         }
-
+        bool id_exists = false;
+        for (User& obj : users)
+        {
+            if (obj.getid() == id)
+            {
+                id_exists = true;             
+                cout << "Повторяющийся ID обнаружен: '" << id << "' — пропущен" << endl;
+                break;
+            }
+        }
+        if (id_exists) continue;
         u.setid(id);
         u.setcity(city);
         u.setgender(gender);
@@ -150,11 +160,13 @@ void Matchmaker::readtofile(const string& filename)
         u.setpassword(password);
         u.getinterests().clear();
 
+        u.getinterests().clear();
         for (int i = 0; i < interest_count; ++i)
         {
-            if (getline(file, line) && !line.empty())
+            getline(file, line);
+            if (!line.empty() && line != "\r" && line != "\n")
             {
-                if (line.size() > 20)
+                if (line.size() > 20) 
                 {
                     line.resize(20);
                 }
@@ -164,6 +176,7 @@ void Matchmaker::readtofile(const string& filename)
         u.loadlikes(file, likes_count);
         users.push_back(u);
     }
+    file.close();
     cout << "Загружено " << users.size() << " пользователей!" << endl;
         
 }
@@ -234,10 +247,11 @@ vector<pair<double, string>> Matchmaker::findmatchesbyid(string user_id)
             pref_idx = i;
             break;
         }
-        if (pref_idx == -1)
-        {
-            cout << "Предпочтения для " << user_id << " не найдены!\n";
-        }
+    }
+    if (pref_idx == -1)
+    {
+        cout << "Предпочтения для " << user_id << " не найдены!\n";
+        return {};//возврат пустого вектора
     }
     return findmatches(pref_idx);
 }

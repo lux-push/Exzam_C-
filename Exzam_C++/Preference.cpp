@@ -82,7 +82,12 @@ Preference::Preference()
         cout << "= Введите Ваш город: ";
         cin.ignore(1000, '\n');
         getline(cin, pref_city);
-        if (pref_city.empty()) pref_city = "Не указан";
+        has_city = true;
+        if (pref_city.empty())
+        {
+            pref_city = "Не указан";
+            has_city = false;
+        }
         break;
     }
 

@@ -2,6 +2,7 @@
 #include "User.h"
 #include "Preference.h"
 #include "Matchmaker.h"
+#include "Funct_Graf.h"
 
 int main()
 {  
@@ -30,16 +31,14 @@ int main()
             mm.getusers().back().savetofile("users.txt");
             current_user = mm.getusers().back().getid();
             print_banner("ПРОФИЛЬ СОЗДАН - " + current_user);
-            cout << "= Профиль сохранён в users.txt                           =\n";
+            cout << "= Профиль сохранён в users.txt\n";
 
             print_banner("Создание Препочтений!");
             cout << "= ======================================================\n";
             Preference new_pref;
-            if (new_pref.getid() == current_user)
-            {
-                mm.addpref(new_pref);
-                cout << "= Предпочтения для " << current_user << " созданы!\n";
-            }
+            new_pref.setid(current_user);
+            mm.addpref(new_pref);
+            cout << "= Предпочтения для " << current_user << " созданы!\n";
         }
         else if (choice_user == 1)
         {
@@ -79,21 +78,22 @@ int main()
             else 
             {
                 print_banner("Ошибка Входа!");
-                cout << "= ❌ Пользователь не найден!                               =\n";
-                cout << "= Проверьте ID и пароль                                    =\n";
+                cout << "= Пользователь не найден!\n";
+                cout << "= Проверьте ID и пароль\n";
                 system("pause");
                 return 1;
             }
         }
-       
 
-        int ret = 1, choice = 0;
+        int choice = 0;
         do
         {
-            cin.clear();
             system("cls");
-            show_menu(current_user);
-            cin >> choice;
+            choice = svaha_menu(current_user);          
+           /* cin.clear();
+            
+            show_menu(current_user); 
+            cin >> choice;*/         
             if (choice < 0 || choice > 7) { cout << "Ошибка ввода!\n\n"; break; }
             switch (choice) 
             {
@@ -111,6 +111,7 @@ int main()
                     cout << "Ошибка чтения файла!\n";
                 }
                 cout << endl << endl;
+                system("pause");
                 break;
             }
 
@@ -119,6 +120,7 @@ int main()
                 print_banner("Все пользователи");
                 mm.showfullusers();
                 cout << endl << endl;
+                system("pause");
                 break;
             }
 
@@ -127,6 +129,7 @@ int main()
                 auto matches = mm.findmatchesbyid(current_user);
                 show_matches(matches, current_user);
                 cout << endl << endl;
+                system("pause");
                 break;
             }
 
@@ -135,11 +138,13 @@ int main()
                 print_banner("ТОП для всех");
                 mm.showmatchs();
                 cout << endl << endl;
+                system("pause");
                 break;
             }
             case 5:  
             {
                 mm.showmylikes(current_user);
+                system("pause");
                 break;
             }
 
@@ -147,10 +152,10 @@ int main()
             {
                 print_banner("Поставить лайк");
                 string target_id;
-                cout << "ID для лайка: ";     
-                cin.clear();
+                cout << "ID для лайка: ";                   
                 cin >> target_id;
                 mm.likeuser(current_user, target_id);
+                system("pause");
                 break;
             }
 
@@ -161,23 +166,24 @@ int main()
                 string remove_id;
                 cin >> remove_id;
                 mm.unlikeuser(current_user, remove_id);
+                system("pause");
                 break;
             }
             case 0:
             {
                 print_banner("Досвидания!");
-                ret = 0;
                 break;
             }
             }
 
-            if (choice != 0) 
+           /* if (choice != 0) 
             {
-                print_banner("Повторить? 1-Да / 0-Нет: ");
-                cout << "= Ваш выбор: ";
-                cin >> ret;          
+                int temp;
+                print_banner("Повторить? 1-Да / 0-Нет: ");                            
+                cin >> temp;
+                ret = temp;  
                 system("cls");
-            }
-        } while (ret == 1);
+            }*/
+        } while (choice != 0);
 }
 
